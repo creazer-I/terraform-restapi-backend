@@ -19,8 +19,12 @@ window.onload = function() {
     canvas2 = document.getElementById('imageCanvas2');
     context2 = canvas2.getContext('2d');
 
-    canvas1.addEventListener('click', checkDifference);
-    canvas2.addEventListener('click', checkDifference);
+    canvas1.addEventListener('click', function(event) {
+        checkDifference(event, canvas1, context1);
+    });
+    canvas2.addEventListener('click', function(event) {
+        checkDifference(event, canvas2, context2);
+    });
 
     canvas1.addEventListener('click', function() { clickProcessed = false; });
     canvas2.addEventListener('click', function() { clickProcessed = false; });
@@ -47,31 +51,26 @@ window.onload = function() {
     img2.src = '/app/images/different-Image-collection1/OfficePuzzle--2.png';
 };
 
-function checkDifference(event) {
-    var x1 = event.clientX - canvas1.getBoundingClientRect().left;
-    var y1 = event.clientY - canvas1.getBoundingClientRect().top;
-
-    var x2 = event.clientX - canvas2.getBoundingClientRect().left;
-    var y2 = event.clientY - canvas2.getBoundingClientRect().top;
+function checkDifference(event, canvas, context) {
+    var rect = canvas.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
 
     differences.forEach(function(difference, index) {
-        var dx1 = difference.x1 - x1;
-        var dy1 = difference.y1 - y1;
-        var distance1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
+        var dx = difference.x1 - x;
+        var dy = difference.y1 - y;
+        var distance1 = Math.sqrt(dx * dx + dy * dy);
 
-        var dx2 = difference.x2 - x2;
-        var dy2 = difference.y2 - y2;
+        var dx2 = difference.x2 - x;
+        var dy2 = difference.y2 - y;
         var distance2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
 
         if ((distance1 < 20 || distance2 < 20) && !difference.found) {
-            [context1, context2].forEach(function(context) {
-                context.beginPath();
-                context.arc(difference.x1, difference.y1, 20, 0, 2 * Math.PI, false);
-                context.arc(difference.x2, difference.y2, 20, 0, 2 * Math.PI, false);
-                context.lineWidth = 3;
-                context.strokeStyle = 'green';
-                context.stroke();
-            });
+            context.beginPath();
+            context.arc(difference.x1, difference.y1, 20, 0, 2 * Math.PI, false);
+            context.lineWidth = 3;
+            context.strokeStyle = 'green';
+            context.stroke();
 
             score += 100;
             differenceCount++;
