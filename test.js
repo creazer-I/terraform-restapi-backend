@@ -31,7 +31,7 @@ function checkDifference(event) {
 
         if ((distance2 < 20) && !difference.found && !found) {
             context2.beginPath();
-            context2.arc(difference.x2, difference.y2, 20, 0, 2 * Math.PI, false);
+            context2.arc(difference.x2 + canvas2.getBoundingClientRect().left, difference.y2 + canvas2.getBoundingClientRect().top, 20, 0, 2 * Math.PI, false);
             context2.lineWidth = 3;
             context2.strokeStyle = 'green';
             context2.stroke();
